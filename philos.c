@@ -36,7 +36,6 @@ unsigned long tol(char *string)
 
 int main(int ac , char **av)
 {
-  t_ph	*philo;
   t_data	data;
   if(ac != 5 && ac != 6)
   {
@@ -53,13 +52,6 @@ int main(int ac , char **av)
   else
     data.notme = -1;  
   data.start_time = time_now_ms();
-  pthread_mutex_init(&data.mutex_stop, NULL);
-  data.stop = false;
-  philo = malloc(sizeof(t_ph) * data.nop);
-  if (!philo)
-    return (1);
-  init(philo, &data);
-  free(philo);
-  pthread_mutex_destroy(&data.mutex_stop);
+  init( &data);
   return (0);
 }

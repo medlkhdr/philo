@@ -24,8 +24,6 @@ typedef struct s_data
   unsigned long tte;
   unsigned long notme;
   unsigned long start_time;
-  bool stop;
-  pthread_mutex_t mutex_stop;
 } t_data;
 
 typedef struct s_ph
@@ -38,5 +36,5 @@ typedef struct s_ph
   pthread_mutex_t *lfork;
 } t_ph;
 unsigned long time_now_ms(void);
-void init(t_ph *philo , t_data *data );
+void init(t_data *data );
 #endif 
