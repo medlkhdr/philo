@@ -1,0 +1,25 @@
+CC = cc 
+CC=cc 
+CFLAGS = -pthread -Wall -Werror -g -fsanitize=address -fsanitize=undefined
+SRCS = philos.c   init.c
+HEADER = philos.h 
+
+OBJS = $(SRCS:.c=.o)
+
+NAME = philo
+
+all: $(NAME)
+
+$(NAME): $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
+
+%.o: %.c $(HEADER)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+clean:
+	rm -rf $(OBJS)
+
+fclean: clean
+	rm -rf $(NAME)
+
+re: fclean all
