@@ -110,7 +110,7 @@ void init(t_data *data)
   pthread_create(&monitor, NULL, &monitor_routine, (void *)ph);
   for (int i = 0 ; i < size ;  i++)
       pthread_mutex_destroy(&forks[i]);
-    for (int i = 0; i < size; i++)
+  for (int i = 0; i < size; i++)
       pthread_join(thread[i], NULL);
     pthread_join(monitor, NULL);
     free(ph);

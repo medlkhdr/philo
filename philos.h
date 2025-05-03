@@ -29,8 +29,8 @@ typedef struct s_data
 typedef struct s_ph
 {
   t_data *data ;
-  int id;
   bool stop;
+  int id;
   unsigned long last_meal;
   pthread_mutex_t *mutex_last_meal;
   pthread_mutex_t *rfork;
