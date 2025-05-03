@@ -1,4 +1,13 @@
 #include "philos.h"
+void ft_usleep(unsigned long time)
+{
+  int i = 0;
+  while(i < time / 1000)
+  {
+    usleep(1000);
+    i++;
+  }
+}
 
 void print_status(t_ph *ph, char *status)
 {
@@ -27,7 +36,7 @@ void eat(t_ph *ph, int *meal_counter)
   print_status(ph, FORK);
   print_status(ph, EAT);
   ph->last_meal = time_now_ms();
-  usleep(ph->data->tte * 1000);
+  ft_usleep(ph->data->tte * 1000);
   pthread_mutex_unlock(ph->rfork);
   pthread_mutex_unlock(ph->lfork);
 }
@@ -40,7 +49,7 @@ unsigned long time_now_ms()
 void issleep(t_ph *ph)
 {
   print_status(ph, SLEEP);
-  usleep(ph->data->tts * 1000);
+  ft_usleep(ph->data->tts * 1000);
 }
 void think(t_ph *ph)
 {
@@ -84,6 +93,8 @@ void *monitor_routine(void *arg)
   }
   return NULL;
 }
+
+
 void init(t_data *data)
 {
   int size = data->nop ;
