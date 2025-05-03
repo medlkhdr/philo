@@ -90,16 +90,13 @@ void init(t_data *data)
   pthread_t monitor;
   t_ph *ph = malloc(sizeof(t_ph) * size);
   pthread_t *thread = malloc(sizeof(pthread_t) * size);
-  // pthread_mutex_t *mutex_last_meal = malloc(sizeof(pthread_mutex_t) * size);
   pthread_mutex_t *forks;
   forks = malloc(sizeof(pthread_mutex_t) * size);
   for (int i = 0; i < size; i++)
   {
     pthread_mutex_init(&forks[i], NULL);
-    // pthread_mutex_init(&mutex_last_meal[i], NULL);
     ph[i].rfork = &forks[i];
     ph[i].lfork = &forks[(i + 1) % size];
-    // ph[i].mutex_last_meal = &mutex_last_meal[i];
   }
   for (int i = 0; i < size; i++)
   {
@@ -109,15 +106,10 @@ void init(t_data *data)
     ph[i].stop = false;
   }
   for (int i = 0; i < size;i++)
-  {
     pthread_create(&thread[i], NULL, &routine, (void *)&ph[i]);
-  }
   pthread_create(&monitor, NULL, &monitor_routine, (void *)ph);
   for (int i = 0 ; i < size ;  i++)
-  {
-      // pthread_mutex_destroy(&mutex_last_meal[i]);
       pthread_mutex_destroy(&forks[i]);
-    }
     for (int i = 0; i < size; i++)
       pthread_join(thread[i], NULL);
     pthread_join(monitor, NULL);
