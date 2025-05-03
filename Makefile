@@ -1,6 +1,6 @@
 CC = cc 
 CC=cc 
-CFLAGS = -g #-pthread -Wall -Werror -g -fsanitize=address -fsanitize=undefined
+CFLAGS = -pthread -Wall -Werror -g -fsanitize=address -fsanitize=undefined
 SRCS = philos.c   init.c
 HEADER = philos.h 
 

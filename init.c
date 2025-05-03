@@ -26,6 +26,7 @@ void eat(t_ph *ph, int *meal_counter)
   print_status(ph, FORK);
   print_status(ph, FORK);
   print_status(ph, EAT);
+  ph->last_meal = time_now_ms();
   usleep(ph->data->tte * 1000);
   pthread_mutex_unlock(ph->rfork);
   pthread_mutex_unlock(ph->lfork);
@@ -55,13 +56,11 @@ void *routine(void *arg)
     if (ph->data->notme != -1 && meal_counter == ph->data->notme)
       break;
     if(ph->stop)
-      break;
-    think(ph);
-    ph->last_meal = time_now_ms();
+      return NULL;
     eat(ph, &meal_counter);
+    think(ph);
     issleep(ph);
   }
-  print_status(ph, DEATH);
   return NULL;
 }
 void *monitor_routine(void *arg)
@@ -74,7 +73,7 @@ void *monitor_routine(void *arg)
     {
       if(ph[i].stop)
         return NULL;
-      if (ph[i].last_meal != 0 & time_now_ms() - ph[i].last_meal >= ph[i].data->ttd)
+      if (ph[i].last_meal != 0 && time_now_ms() - ph[i].last_meal >= ph[i].data->ttd)
       {
         print_status(&ph[i], DEATH);
         for (int j = 0; j < size; j++)
@@ -106,7 +105,6 @@ void init(t_data *data)
   {
     ph[i].data = data;
     ph[i].id = i + 1;
-    ph[i].data->start_time = time_now_ms();
     ph[i].last_meal = 0;
     ph[i].stop = false;
   }
@@ -126,10 +124,4 @@ void init(t_data *data)
     free(ph);
     free(thread);
     free(forks);
-    // free(mutex_last_meal);
-    ph = NULL;
-    thread = NULL;
-    forks = NULL;
-    // mutex_last_meal = NULL;
-    data = NULL;
 }
