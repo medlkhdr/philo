@@ -52,6 +52,6 @@ int main(int ac , char **av)
   else
     data.notme = -1;  
   data.start_time = time_now_ms();
-  init( &data);
+  init(&data);
   return (0);
 }

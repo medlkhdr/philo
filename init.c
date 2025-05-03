@@ -54,6 +54,8 @@ void *routine(void *arg)
   {
     if (ph->data->notme != -1 && meal_counter == ph->data->notme)
       break;
+    if(ph->stop)
+      break;
     think(ph);
     ph->last_meal = time_now_ms();
     eat(ph, &meal_counter);
@@ -62,13 +64,72 @@ void *routine(void *arg)
   print_status(ph, DEATH);
   return NULL;
 }
+void *monitor_routine(void *arg)
+{
+  t_ph *ph = (t_ph *)arg;
+  int size = ph->data->nop;
+  while (1)
+  {
+    for (int i = 0; i < size; i++)
+    {
+      if(ph[i].stop)
+        return NULL;
+      if (ph[i].last_meal != 0 & time_now_ms() - ph[i].last_meal >= ph[i].data->ttd)
+      {
+        print_status(&ph[i], DEATH);
+        for (int j = 0; j < size; j++)
+          ph[j].stop = true;
+        break;
+      }
+    }
+  }
+  return NULL;
+}
 void init(t_data *data)
 {
   int size = data->nop ;
-  t_ph *ph = malloc(sizeof(t_ph) * size );
+  pthread_t monitor;
+  t_ph *ph = malloc(sizeof(t_ph) * size);
   pthread_t *thread = malloc(sizeof(pthread_t) * size);
+  // pthread_mutex_t *mutex_last_meal = malloc(sizeof(pthread_mutex_t) * size);
+  pthread_mutex_t *forks;
+  forks = malloc(sizeof(pthread_mutex_t) * size);
   for (int i = 0; i < size; i++)
+  {
+    pthread_mutex_init(&forks[i], NULL);
+    // pthread_mutex_init(&mutex_last_meal[i], NULL);
+    ph[i].rfork = &forks[i];
+    ph[i].lfork = &forks[(i + 1) % size];
+    // ph[i].mutex_last_meal = &mutex_last_meal[i];
+  }
+  for (int i = 0; i < size; i++)
+  {
+    ph[i].data = data;
+    ph[i].id = i + 1;
+    ph[i].data->start_time = time_now_ms();
+    ph[i].last_meal = 0;
+    ph[i].stop = false;
+  }
+  for (int i = 0; i < size;i++)
   {
     pthread_create(&thread[i], NULL, &routine, (void *)&ph[i]);
   }
+  pthread_create(&monitor, NULL, &monitor_routine, (void *)ph);
+  for (int i = 0 ; i < size ;  i++)
+  {
+      // pthread_mutex_destroy(&mutex_last_meal[i]);
+      pthread_mutex_destroy(&forks[i]);
+    }
+    for (int i = 0; i < size; i++)
+      pthread_join(thread[i], NULL);
+    pthread_join(monitor, NULL);
+    free(ph);
+    free(thread);
+    free(forks);
+    // free(mutex_last_meal);
+    ph = NULL;
+    thread = NULL;
+    forks = NULL;
+    // mutex_last_meal = NULL;
+    data = NULL;
 }

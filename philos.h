@@ -30,6 +30,7 @@ typedef struct s_ph
 {
   t_data *data ;
   int id;
+  bool stop;
   unsigned long last_meal;
   pthread_mutex_t *mutex_last_meal;
   pthread_mutex_t *rfork;
