@@ -122,8 +122,8 @@ void init(t_data *data)
 {
   int size = data->nop ;
   pthread_t monitor;
-  pthread_mutex_t *mutex_last_meal;
   // pthread_mutex_t *stop
+  pthread_mutex_t *mutex_last_meal;
   mutex_last_meal = malloc(sizeof(pthread_mutex_t));
   pthread_mutex_t *stop;
 
@@ -149,7 +149,7 @@ void init(t_data *data)
     ph[i].data = data;
     ph[i].id = i + 1;
     ph[i].last_meal = 0;
-    // ph[i].stop = false;
+  
   }
   for (int i = 0; i < size;i++)
     pthread_create(&thread[i], NULL, &routine, (void *)&ph[i]);
