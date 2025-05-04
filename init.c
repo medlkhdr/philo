@@ -20,10 +20,14 @@ void ft_msleep(unsigned long msec)
 void print_status(t_ph *ph, char *status)
 {
   unsigned long time = time_now_ms() - ph->data->start_time;
-  // mujtex lock
+  pthread_mutex_lock(ph->stop_mutex);
   if (!ph->data->stop)
+  {
+    pthread_mutex_lock(ph->print_mutex);
     printf("%lu %d %s\n", time, ph->id, status);
-  // mujtex unlock
+    pthread_mutex_unlock(ph->print_mutex);
+  }
+  pthread_mutex_unlock(ph->stop_mutex);
 }
 void eat(t_ph *ph, int *meal_counter)
 {
@@ -84,8 +88,13 @@ void *routine(void *arg)
       die(ph);
       return NULL;
     }
-    if(ph->data->stop)
-        return NULL;
+    pthread_mutex_lock(ph->stop_mutex);
+    if (ph->data->stop)
+    {
+      pthread_mutex_unlock(ph->stop_mutex);
+      return NULL;
+    }
+    pthread_mutex_unlock(ph->stop_mutex);
     if (ph->data->notme != -1 && meal_counter == ph->data->notme)
     {
       ph->data->stop = true;
@@ -131,7 +140,9 @@ void init(t_data *data)
   pthread_mutex_t *mutex_last_meal;
   mutex_last_meal = malloc(sizeof(pthread_mutex_t));
   pthread_mutex_t *stop;
-
+  pthread_mutex_t *print_mutex;
+  print_mutex = malloc(sizeof(pthread_mutex_t));
+  pthread_mutex_init(print_mutex , NULL);
   t_ph *ph = malloc(sizeof(t_ph) * size);
   pthread_t *thread = malloc(sizeof(pthread_t) * size);
   pthread_mutex_t *forks;
@@ -147,6 +158,7 @@ void init(t_data *data)
     ph[i].rfork = &forks[i];
     ph[i].stop_mutex = stop;
     ph[i].lfork = &forks[(i + 1) % size];
+    ph[i].print_mutex = print_mutex;
     ph[i].mutex_last_meal = mutex_last_meal;
   }
   for (int i = 0; i < size; i++)
