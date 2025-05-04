@@ -32,6 +32,8 @@ typedef struct s_ph
   bool stop;
   int id;
   unsigned long last_meal;
+  unsigned long meal_counter;
+  pthread_mutex_t meal_counter_mutex;
   pthread_mutex_t *mutex_last_meal;
   pthread_mutex_t *rfork;
   pthread_mutex_t *lfork;
