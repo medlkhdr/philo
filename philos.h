@@ -24,19 +24,21 @@ typedef struct s_data
   unsigned long tte;
   unsigned long notme;
   unsigned long start_time;
+  bool stop;
 } t_data;
 
 typedef struct s_ph
 {
   t_data *data;
-  bool stop;
   int id;
+  pthread_mutex_t *stop_mutex;
   unsigned long last_meal;
   unsigned long meal_counter;
   pthread_mutex_t meal_counter_mutex;
   pthread_mutex_t *mutex_last_meal;
   pthread_mutex_t *rfork;
   pthread_mutex_t *lfork;
+  pthread_mutex_t *print_mutex;
 } t_ph;
 unsigned long time_now_ms(void);
 void init(t_data *data );
