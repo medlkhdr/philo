@@ -22,9 +22,10 @@ typedef struct s_data
   unsigned long ttd;
   unsigned long tts;
   unsigned long tte;
+  bool stop;
+
   unsigned long notme;
   unsigned long start_time;
-  bool stop;
 } t_data;
 
 typedef struct s_ph
@@ -33,8 +34,6 @@ typedef struct s_ph
   int id;
   pthread_mutex_t *stop_mutex;
   unsigned long last_meal;
-  unsigned long meal_counter;
-  pthread_mutex_t meal_counter_mutex;
   pthread_mutex_t *mutex_last_meal;
   pthread_mutex_t *rfork;
   pthread_mutex_t *lfork;
