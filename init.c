@@ -55,8 +55,16 @@ void eat(t_ph *ph, int *meal_counter)
   ph->last_meal = time_now_ms();
   pthread_mutex_unlock(ph->mutex_last_meal);
   ft_msleep(ph->data->tte);
-  pthread_mutex_unlock(ph->rfork);
-  pthread_mutex_unlock(ph->lfork);
+  if(ph->id % 2 == 0)
+  {
+    pthread_mutex_unlock(ph->rfork);
+    pthread_mutex_unlock(ph->lfork);
+  }
+  else
+  {
+    pthread_mutex_unlock(ph->lfork);
+    pthread_mutex_unlock(ph->rfork);
+  }
 }
 
 
@@ -172,13 +180,21 @@ void init(t_data *data)
     pthread_create(&thread[i], NULL, &routine, (void *)&ph[i]);
   if(data->nop != 1)
     pthread_create(&monitor, NULL, &monitor_routine, (void *)ph);
-  for (int i = 0 ; i < size ;  i++)
-      pthread_mutex_destroy(&forks[i]);
   for (int i = 0; i < size; i++)
-      pthread_join(thread[i], NULL);
-  if(data->nop != 1)
+  {
+    pthread_join(thread[i], NULL);
+  }
+   if(ph[0].data->nop != 1)
+  {
     pthread_join(monitor, NULL);
+  }
+  for (int i = 0 ; i < size ;  i++)
+  {
+    pthread_mutex_destroy(&forks[i]);
+  }
   pthread_mutex_destroy(mutex_last_meal);
+  pthread_mutex_destroy(stop);
+  // pthread_mutex_
   free(ph);
   free(thread);
   free(mutex_last_meal);
