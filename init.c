@@ -1,11 +1,21 @@
 #include "philos.h"
-void ft_usleep(unsigned long usec)
+
+unsigned long time_now_ms()
 {
-  unsigned long loops = usec / 100;
-  for (unsigned long i = 0; i < loops; i++)
+  struct timeval tv;
+  gettimeofday(&tv, NULL);
+  return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
+}
+void ft_msleep(unsigned long msec)
+{
+  size_t start;
+  size_t target;
+
+  start = time_now_ms();
+  target = start + msec;
+  while (time_now_ms() < target)
     usleep(100);
 }
-
 
 void print_status(t_ph *ph, char *status)
 {
@@ -40,20 +50,16 @@ void eat(t_ph *ph, int *meal_counter)
   pthread_mutex_lock(ph->mutex_last_meal);
   ph->last_meal = time_now_ms();
   pthread_mutex_unlock(ph->mutex_last_meal);
-  ft_usleep(ph->data->tte * 1000);
+  ft_msleep(ph->data->tte);
   pthread_mutex_unlock(ph->rfork);
   pthread_mutex_unlock(ph->lfork);
 }
-unsigned long time_now_ms()
-{
-  struct timeval tv;
-  gettimeofday(&tv, NULL);
-  return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
-}
+
+
 void issleep(t_ph *ph)
 {
   print_status(ph, SLEEP);
-  ft_usleep(ph->data->tts * 1000);
+  ft_msleep(ph->data->tts);
 }
 
 void think(t_ph *ph)
@@ -62,7 +68,7 @@ void think(t_ph *ph)
 }
 void die(t_ph *ph)
 {
-  ft_usleep(ph->data->ttd * 1000);
+  ft_msleep(ph->data->ttd);
   print_status(ph, DEATH);
 }
 void *routine(void *arg)
@@ -99,8 +105,8 @@ void *monitor_routine(void *arg)
   {
     for (int i = 0; i < size; i++)
     {
-      // if(ph[i].stop)
-      //   return NULL;
+      if(ph[i].data->stop)
+        return NULL;
       pthread_mutex_lock(ph[i].mutex_last_meal);
       if (ph[i].last_meal != 0 && time_now_ms() - ph[i].last_meal > ph[i].data->ttd)
       {
@@ -122,7 +128,6 @@ void init(t_data *data)
 {
   int size = data->nop ;
   pthread_t monitor;
-  // pthread_mutex_t *stop
   pthread_mutex_t *mutex_last_meal;
   mutex_last_meal = malloc(sizeof(pthread_mutex_t));
   pthread_mutex_t *stop;
