@@ -1,13 +1,11 @@
 #include "philos.h"
-void ft_usleep(unsigned long time)
+void ft_usleep(unsigned long usec)
 {
-  int i = 0;
-  while(i < time / 1000)
-  {
-    usleep(1000);
-    i++;
-  }
+  unsigned long loops = usec / 100;
+  for (unsigned long i = 0; i < loops; i++)
+    usleep(100);
 }
+
 
 void print_status(t_ph *ph, char *status)
 {
@@ -16,6 +14,7 @@ void print_status(t_ph *ph, char *status)
 }
 void eat(t_ph *ph, int *meal_counter)
 {
+
   if(ph->data->notme != -1)
   {
     if(*meal_counter == ph->data->notme)
@@ -36,7 +35,7 @@ void eat(t_ph *ph, int *meal_counter)
   print_status(ph, FORK);
   print_status(ph, EAT);
   ph->last_meal = time_now_ms();
-  ft_usleep(ph->data->tte * 1000);
+  usleep(ph->data->tte * 1000);
   pthread_mutex_unlock(ph->rfork);
   pthread_mutex_unlock(ph->lfork);
 }
@@ -49,11 +48,17 @@ unsigned long time_now_ms()
 void issleep(t_ph *ph)
 {
   print_status(ph, SLEEP);
-  ft_usleep(ph->data->tts * 1000);
+  usleep(ph->data->tts * 1000);
 }
+
 void think(t_ph *ph)
 {
   print_status(ph, THINK);
+}
+void die(t_ph *ph)
+{
+  ft_usleep(ph->data->ttd * 1000);
+  print_status(ph, DEATH);
 }
 void *routine(void *arg)
 {
@@ -62,10 +67,17 @@ void *routine(void *arg)
 
   while (1)
   {
-    if (ph->data->notme != -1 && meal_counter == ph->data->notme)
-      break;
-    if(ph->stop)
+    if(ph->data->nop == 1)
+    {
+      print_status(ph, FORK);
+      die(ph);
+      
       return NULL;
+    }
+    if (ph->data->notme != -1 && meal_counter == ph->data->notme)
+    return NULL;
+    if(ph->stop)
+        return NULL;
     eat(ph, &meal_counter);
     think(ph);
     issleep(ph);
@@ -109,6 +121,7 @@ void init(t_data *data)
     ph[i].rfork = &forks[i];
     ph[i].lfork = &forks[(i + 1) % size];
   }
+  data->start_time = time_now_ms();
   for (int i = 0; i < size; i++)
   {
     ph[i].data = data;

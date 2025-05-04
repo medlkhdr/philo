@@ -28,7 +28,7 @@ typedef struct s_data
 
 typedef struct s_ph
 {
-  t_data *data ;
+  t_data *data;
   bool stop;
   int id;
   unsigned long last_meal;
