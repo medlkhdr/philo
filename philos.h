@@ -28,16 +28,25 @@ typedef struct s_data
   unsigned long start_time;
 } t_data;
 
-typedef struct s_ph
+typedef struct s_mutex 
 {
-  t_data *data;
-  int id;
   pthread_mutex_t *stop_mutex;
-  unsigned long last_meal;
   pthread_mutex_t *mutex_last_meal;
   pthread_mutex_t *rfork;
   pthread_mutex_t *lfork;
   pthread_mutex_t *print_mutex;
+} t_mutex;
+// tyepdef struct s_store
+// {
+
+// };
+typedef struct s_ph
+{
+  pthread_t  id_thread;
+  t_mutex mutex;
+  t_data *data;
+  int id;
+  unsigned long last_meal;
 } t_ph;
 unsigned long time_now_ms(void);
 void init(t_data *data );

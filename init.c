@@ -20,14 +20,14 @@ void ft_msleep(unsigned long msec)
 void print_status(t_ph *ph, char *status)
 {
   unsigned long time = time_now_ms() - ph->data->start_time;
-  pthread_mutex_lock(ph->stop_mutex);
+  pthread_mutex_lock(ph->mutex.stop_mutex);
   if (!ph->data->stop)
   {
-    pthread_mutex_lock(ph->print_mutex);
+    pthread_mutex_lock(ph->mutex.print_mutex);
     printf("%lu %d %s\n", time, ph->id, status);
-    pthread_mutex_unlock(ph->print_mutex);
+    pthread_mutex_unlock(ph->mutex.print_mutex);
   }
-  pthread_mutex_unlock(ph->stop_mutex);
+  pthread_mutex_unlock(ph->mutex.stop_mutex);
 }
 void eat(t_ph *ph, int *meal_counter)
 {
@@ -40,30 +40,30 @@ void eat(t_ph *ph, int *meal_counter)
   }
   if(ph->id % 2 == 0)
   {
-    pthread_mutex_lock(ph->lfork);
-    pthread_mutex_lock(ph->rfork);
+    pthread_mutex_lock(ph->mutex.lfork);
+    pthread_mutex_lock(ph->mutex.rfork);
   }
   else
   {
-    pthread_mutex_lock(ph->rfork);
-    pthread_mutex_lock(ph->lfork);
+    pthread_mutex_lock(ph->mutex.rfork);
+    pthread_mutex_lock(ph->mutex.lfork);
   }
   print_status(ph, FORK);
   print_status(ph, FORK);
   print_status(ph, EAT);
-  pthread_mutex_lock(ph->mutex_last_meal);
+  pthread_mutex_lock(ph->mutex.mutex_last_meal);
   ph->last_meal = time_now_ms();
-  pthread_mutex_unlock(ph->mutex_last_meal);
+  pthread_mutex_unlock(ph->mutex.mutex_last_meal);
   ft_msleep(ph->data->tte);
   if(ph->id % 2 == 0)
   {
-    pthread_mutex_unlock(ph->rfork);
-    pthread_mutex_unlock(ph->lfork);
+    pthread_mutex_unlock(ph->mutex.rfork);
+    pthread_mutex_unlock(ph->mutex.lfork);
   }
   else
   {
-    pthread_mutex_unlock(ph->lfork);
-    pthread_mutex_unlock(ph->rfork);
+    pthread_mutex_unlock(ph->mutex.lfork);
+    pthread_mutex_unlock(ph->mutex.rfork);
   }
 }
 
@@ -96,13 +96,13 @@ void *routine(void *arg)
       die(ph);
       return NULL;
     }
-    pthread_mutex_lock(ph->stop_mutex);
+    pthread_mutex_lock(ph->mutex.stop_mutex);
     if (ph->data->stop)
     {
-      pthread_mutex_unlock(ph->stop_mutex);
+      pthread_mutex_unlock(ph->mutex.stop_mutex);
       return NULL;
     }
-    pthread_mutex_unlock(ph->stop_mutex);
+    pthread_mutex_unlock(ph->mutex.stop_mutex);
     if (ph->data->notme != -1 && meal_counter == ph->data->notme)
     {
       ph->data->stop = true;
@@ -124,17 +124,17 @@ void *monitor_routine(void *arg)
     {
       if(ph[i].data->stop)
         return NULL;
-      pthread_mutex_lock(ph[i].mutex_last_meal);
+      pthread_mutex_lock(ph[i].mutex.mutex_last_meal);
       if (ph[i].last_meal != 0 && time_now_ms() - ph[i].last_meal > ph[i].data->ttd)
       {
-        pthread_mutex_unlock(ph[i].mutex_last_meal);
+        pthread_mutex_unlock(ph[i].mutex.mutex_last_meal);
         die(&ph[i]);
-        pthread_mutex_lock(ph[i].stop_mutex);
+        pthread_mutex_lock(ph[i].mutex.stop_mutex);
         ph[i].data->stop = true;
-        pthread_mutex_unlock(ph[i].stop_mutex);
+        pthread_mutex_unlock(ph[i].mutex.stop_mutex);
         break;
       }
-      pthread_mutex_unlock(ph[i].mutex_last_meal);
+      pthread_mutex_unlock(ph[i].mutex.mutex_last_meal);
     }
   }
   return NULL;
@@ -163,18 +163,20 @@ void init(t_data *data)
   for (int i = 0; i < size; i++)
   {
     pthread_mutex_init(&forks[i], NULL);
-    ph[i].rfork = &forks[i];
-    ph[i].stop_mutex = stop;
-    ph[i].lfork = &forks[(i + 1) % size];
-    ph[i].print_mutex = print_mutex;
-    ph[i].mutex_last_meal = mutex_last_meal;
   }
+  for (int i = 0; i < size; i++)
+  {
+    ph[i].mutex.rfork = &forks[i];
+   ph[i].mutex.stop_mutex = stop;
+      ph[i].mutex.lfork = &forks[(i + 1) % size];
+      ph[i].mutex.print_mutex = print_mutex;
+      ph[i].mutex.mutex_last_meal = mutex_last_meal;
+    }
   for (int i = 0; i < size; i++)
   {
     ph[i].data = data;
     ph[i].id = i + 1;
     ph[i].last_meal = 0;
-  
   }
   for (int i = 0; i < size;i++)
     pthread_create(&thread[i], NULL, &routine, (void *)&ph[i]);
@@ -200,3 +202,8 @@ void init(t_data *data)
   free(mutex_last_meal);
   free(forks);
 }
+
+// void clean_up(t_ph *p)
+// {
+//   for()
+// }
