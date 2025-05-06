@@ -1,8 +1,8 @@
 #include "philos.h"
-unsigned long tol(char *string)
+ssize_t  tol(char *string)
 {
 	int		i;
-	unsigned long	res;
+	ssize_t res;
 
 	res = 0;
 	i = 0;
@@ -52,6 +52,8 @@ int main(int ac , char **av)
   else
     data.notme = -1;  
   data.start_time = time_now_ms();
+  if(data.nop == -1 || data.nop == 0  || data.tts == -1 || data.ttd == -1 || data.tte == -1 )
+    return 1;
   init(&data);
   return (0);
 }

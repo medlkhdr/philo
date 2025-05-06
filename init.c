@@ -14,7 +14,9 @@ void ft_msleep(unsigned long msec)
   start = time_now_ms();
   target = start + msec;
   while (time_now_ms() < target)
-    usleep(100);
+    {
+      usleep(100);
+    }
 }
 
 void print_status(t_ph *ph, char *status)
@@ -140,10 +142,47 @@ void *monitor_routine(void *arg)
   return NULL;
 }
 
+void Housekeeping(t_housekeeped clean)
+{
+  int size;
 
+  size = clean.ph[0].data->nop;
+
+  for (int i = 0; i < size; i++)
+  {
+    pthread_mutex_destroy(&clean.forks[i]);
+  }
+  pthread_mutex_destroy(clean.mutex_last_meal);
+  pthread_mutex_destroy(clean.stop);
+  free(clean.ph);
+  free(clean.thread);
+  free(clean.mutex_last_meal);
+  free(clean.forks);
+}
+
+void creater_joiner(pthread_t *thread, pthread_t monitor , t_ph *ph)
+{
+  int size;
+  t_data *data;
+
+  data = ph[0].data;
+
+  size = ph[0].data->nop;
+  for (int i = 0; i < size; i++)
+  {
+    pthread_create(&thread[i], NULL, &routine, (void *)&ph[i]);
+  }
+  if(data->nop != 1)
+    pthread_create(&monitor, NULL, &monitor_routine, (void *)ph);
+for (int i = 0; i < size; i++)
+{  pthread_join(thread[i], NULL);}
+ if(size != 1)
+  pthread_join(monitor, NULL);
+}
 void init(t_data *data)
 {
-  int size = data->nop ;
+  t_housekeeped clean;
+  int size = data->nop;
   pthread_t monitor;
   pthread_mutex_t *mutex_last_meal;
   mutex_last_meal = malloc(sizeof(pthread_mutex_t));
@@ -160,50 +199,27 @@ void init(t_data *data)
   pthread_mutex_init(stop, NULL);
   data->stop = false;
   data->start_time = time_now_ms();
+  clean.forks = forks;
+  clean.mutex_last_meal = mutex_last_meal;
+  clean.ph = ph;
+  clean.print_mutex = print_mutex;
+  clean.stop = stop;
+  clean.thread = thread; 
+
   for (int i = 0; i < size; i++)
   {
     pthread_mutex_init(&forks[i], NULL);
-  }
-  for (int i = 0; i < size; i++)
-  {
     ph[i].mutex.rfork = &forks[i];
-   ph[i].mutex.stop_mutex = stop;
-      ph[i].mutex.lfork = &forks[(i + 1) % size];
-      ph[i].mutex.print_mutex = print_mutex;
-      ph[i].mutex.mutex_last_meal = mutex_last_meal;
-    }
-  for (int i = 0; i < size; i++)
-  {
+    ph[i].mutex.stop_mutex = stop;
+    ph[i].mutex.lfork = &forks[(i + 1) % size];
+    ph[i].id_thread = &thread[i];
+    ph[i].mutex.print_mutex = print_mutex;
+    ph[i].mutex.mutex_last_meal = mutex_last_meal;
     ph[i].data = data;
     ph[i].id = i + 1;
     ph[i].last_meal = 0;
   }
-  for (int i = 0; i < size;i++)
-    pthread_create(&thread[i], NULL, &routine, (void *)&ph[i]);
-  if(data->nop != 1)
-    pthread_create(&monitor, NULL, &monitor_routine, (void *)ph);
-  for (int i = 0; i < size; i++)
-  {
-    pthread_join(thread[i], NULL);
-  }
-   if(ph[0].data->nop != 1)
-  {
-    pthread_join(monitor, NULL);
-  }
-  for (int i = 0 ; i < size ;  i++)
-  {
-    pthread_mutex_destroy(&forks[i]);
-  }
-  pthread_mutex_destroy(mutex_last_meal);
-  pthread_mutex_destroy(stop);
-  // pthread_mutex_
-  free(ph);
-  free(thread);
-  free(mutex_last_meal);
-  free(forks);
+  creater_joiner(thread, monitor, ph);
+  Housekeeping(clean);
 }
 
-// void clean_up(t_ph *p)
-// {
-//   for()
-// }
