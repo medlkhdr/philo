@@ -160,11 +160,11 @@ void Housekeeping(t_housekeeped clean)
   free(clean.forks);
 }
 
-void creater_joiner(pthread_t *thread, pthread_t monitor , t_ph *ph)
+void creater_joiner(pthread_t *thread,  t_ph *ph)
 {
   int size;
   t_data *data;
-
+  pthread_t  monitor; 
   data = ph[0].data;
 
   size = ph[0].data->nop;
@@ -183,7 +183,7 @@ void init(t_data *data)
 {
   t_housekeeped clean;
   int size = data->nop;
-  pthread_t monitor;
+  // pthread_t monitor;
   pthread_mutex_t *mutex_last_meal;
   mutex_last_meal = malloc(sizeof(pthread_mutex_t));
   pthread_mutex_t *stop;
@@ -219,7 +219,7 @@ void init(t_data *data)
     ph[i].id = i + 1;
     ph[i].last_meal = 0;
   }
-  creater_joiner(thread, monitor, ph);
+  creater_joiner(thread, ph);
   Housekeeping(clean);
 }
 
