@@ -34,11 +34,12 @@ typedef struct s_mutex
   pthread_mutex_t *rfork;
   pthread_mutex_t *lfork;
   pthread_mutex_t *print_mutex;
+  pthread_mutex_t *forks;
 } t_mutex;
 
 typedef struct s_ph
 {
-  pthread_t  *id_thread;
+  // pthread_t  *thread;
   t_mutex mutex;
   t_data *data;
   int id;
@@ -54,11 +55,7 @@ typedef struct s_housekeeped
   pthread_mutex_t *forks;
   pthread_t *thread;
 } t_housekeeped;
-// typedef struct s_construc
-// {
-//   t_mutex *mutex;
-//   t_
-// } t_construct;
+
 unsigned long time_now_ms(void);
 void init(t_data *data );
 #endif 
