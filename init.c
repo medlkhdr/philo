@@ -116,11 +116,16 @@ void *routine(void *arg)
 }
 void *monitor_routine(void *arg)
 {
-  t_ph *ph = (t_ph *)arg;
-  int size = ph->data->nop;
+  t_ph *ph;
+  int size;
+  int i;
+
+  ph = (t_ph *)arg;
+  size = ph->data->nop;
   while (1)
   {
-    for (int i = 0; i < size; i++)
+    i = 0;
+    while (i < size)
     {
       if(ph[i].data->stop)
         return NULL;
@@ -135,6 +140,7 @@ void *monitor_routine(void *arg)
         break;
       }
       pthread_mutex_unlock(ph[i].mutex.mutex_last_meal);
+      i++;
     }
   }
   return NULL;
@@ -143,12 +149,15 @@ void *monitor_routine(void *arg)
 void Housekeeping(t_housekeeped clean)
 {
   int size;
+  int i;
 
+  i = 0;
   size = clean.ph[0].data->nop;
 
-  for (int i = 0; i < size; i++)
+  while (i < size)
   {
     pthread_mutex_destroy(&clean.forks[i]);
+    i++;
   }
   pthread_mutex_destroy(clean.mutex_last_meal);
   pthread_mutex_destroy(clean.stop);
@@ -164,36 +173,45 @@ void creater_joiner(t_ph *ph , pthread_t *thread)
 {
   int size;
   t_data *data;
-  pthread_t  monitor; 
-  data = ph[0].data;
+  pthread_t  monitor;
+  int i;
 
+  i = 0;
+  data = ph[0].data;
   size = ph[0].data->nop;
-  for (int i = 0; i < size; i++)
+  while(i < size)
   {
     pthread_create(&thread[i], NULL, &routine, (void *)&ph[i]);
+    i++;
   }
   if(data->nop != 1)
     pthread_create(&monitor, NULL, &monitor_routine, (void *)ph);
-for (int i = 0; i < size; i++)
-{  pthread_join(thread[i], NULL);}
+  i = 0;
+  while (i < size)
+   {
+     pthread_join(thread[i], NULL);
+     i++;
+   }
  if(size != 1)
   pthread_join(monitor, NULL);
 }
 void init_used_data(t_ph *ph, t_data *data, pthread_t *thread, pthread_mutex_t *forks )
 {
   int size;
+  int i;
   pthread_mutex_t *mutex_last_meal;
-  mutex_last_meal = malloc(sizeof(pthread_mutex_t));
   pthread_mutex_t *stop;
   pthread_mutex_t *print_mutex;
   print_mutex = malloc(sizeof(pthread_mutex_t));
+  mutex_last_meal = malloc(sizeof(pthread_mutex_t));
   pthread_mutex_init(print_mutex , NULL);
   stop = malloc(sizeof(pthread_mutex_t));
   pthread_mutex_init(stop, NULL);
   pthread_mutex_init(mutex_last_meal, NULL);
   data->stop = false;
   size = data->nop;
-  for (int i = 0; i < size; i++)
+  i = 0;
+  while (i < size)
   {
     pthread_mutex_init(&forks[i], NULL);
     ph[i].mutex.rfork = &forks[i];
@@ -203,7 +221,7 @@ void init_used_data(t_ph *ph, t_data *data, pthread_t *thread, pthread_mutex_t *
     ph[i].mutex.mutex_last_meal = mutex_last_meal;
     ph[i].data = data;
     ph[i].id = i + 1;
-    ph[i].last_meal = 0;
+    ph[i++].last_meal = 0;
   }
 }
 
