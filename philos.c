@@ -31,8 +31,25 @@ ssize_t  tol(char *string)
   }
   return (res);
 }
+int starting(t_data *data , char **av  , int ac )
+{
 
-
+  data->nop = tol(av[1]);
+  data->ttd = tol(av[2]);
+  data->tte = tol(av[3]);
+  data->tts = tol(av[4]);
+  if(ac == 6)
+    data->notme = tol(av[5]);
+  else
+    data->notme = -1;  
+  data->start_time = time_now_ms();
+  if(data->nop == -1 || data->nop == 0  || data->tts == -1 || data->ttd == -1 || data->tte == -1 )
+  {
+    printf("be logical, try to ask the project owner what u should test if you don't know what you are doing\n");
+    return 1;
+  }
+  return 0;
+}
 
 int main(int ac , char **av)
 {
@@ -42,17 +59,7 @@ int main(int ac , char **av)
     printf("TRY TO ENTER THE RIGHT ARGUMENTS HONEY :| ");
     return 1;
   }
-
-  data.nop = tol(av[1]);
-  data.ttd = tol(av[2]);
-  data.tte = tol(av[3]);
-  data.tts = tol(av[4]);
-  if(ac == 6)
-    data.notme = tol(av[5]);
-  else
-    data.notme = -1;  
-  data.start_time = time_now_ms();
-  if(data.nop == -1 || data.nop == 0  || data.tts == -1 || data.ttd == -1 || data.tte == -1 )
+  if(starting(&data, av, ac))
     return 1;
   init(&data);
   return (0);
