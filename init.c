@@ -126,8 +126,8 @@ void *monitor_routine(void *arg)
   size = ph->data->nop;
   while (1)
   {
-    i = 0;
-    while (i < size)
+    i = -1;
+    while (++i < size)
     {
       if(ph[i].data->stop)
         return NULL;
@@ -139,10 +139,9 @@ void *monitor_routine(void *arg)
         pthread_mutex_lock(ph[i].mutex.stop_mutex);
         ph[i].data->stop = true;
         pthread_mutex_unlock(ph[i].mutex.stop_mutex);
-        break;
+        return NULL;
       }
       pthread_mutex_unlock(ph[i].mutex.mutex_last_meal);
-      i++;
     }
   }
   return NULL;
