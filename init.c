@@ -19,7 +19,9 @@ void ft_msleep(unsigned long msec)
 
 void print_status(t_ph *ph, char *status)
 {
-  unsigned long time = time_now_ms() - ph->data->start_time;
+  unsigned long time;
+
+  time = time_now_ms() - ph->data->start_time;
   pthread_mutex_lock(ph->mutex.stop_mutex);
   if (!ph->data->stop)
   {
@@ -238,15 +240,17 @@ t_housekeeped cleaner_init(t_ph *ph , pthread_t *thread , pthread_mutex_t *forks
 }
 void init(t_data *data)
 {
-  int size = data->nop;
+  int size;
   t_housekeeped clean;
   pthread_mutex_t *forks;
+  pthread_t *thread;
+
+  size = data->nop;
   forks = malloc(sizeof(pthread_mutex_t) * size);
-  pthread_t *thread = malloc(sizeof(pthread_t) * size);
+  thread = malloc(sizeof(pthread_t) * size);
   t_ph *ph = malloc(sizeof(t_ph) * size);
   init_used_data(ph, data , thread , forks);
   clean = cleaner_init(ph, thread, forks);
   creater_joiner(ph, thread);
   Housekeeping(clean);
 }
-

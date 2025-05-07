@@ -39,12 +39,12 @@ typedef struct s_mutex
 
 typedef struct s_ph
 {
-  // pthread_t  *thread;
   t_mutex mutex;
   t_data *data;
   int id;
   unsigned long last_meal;
 } t_ph;
+
 typedef struct s_housekeeped
 {
   t_ph *ph;
