@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   philos.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: feedback <feedback@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/08 16:18:44 by feedback          #+#    #+#             */
-/*   Updated: 2025/05/08 16:18:45 by feedback         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "philos.h"
 
 ssize_t	tol(char *string)
@@ -59,8 +47,8 @@ int	starting(t_data *data, char **av, int ac)
 	if (data->nop == -1 || data->nop == 0 || data->tts == -1 || data->ttd == -1
 		|| data->tte == -1)
 	{
-		printf("be logical,
-			try to ask the project owner what u should test if you don't know what you are doing\n");
+		printf("be logical\n");
+		printf("try to ask the project owner what u should test if you don't know what you are doing\n");
 		return (1);
 	}
 	data->start_time = time_now_ms();
