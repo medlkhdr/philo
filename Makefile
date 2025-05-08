@@ -1,5 +1,5 @@
 CC = cc 
-CFLAGS = -pthread -Wall -Werror -g3 -fsanitize=thread  #-fsanitize=undefined
+CFLAGS = -pthread -Wall -Werror #-g3 -fsanitize=thread  #-fsanitize=undefined
 SRCS = philos.c   init.c
 HEADER = philos.h 
 
