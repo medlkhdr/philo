@@ -64,11 +64,11 @@ void	eat(t_ph *ph, int *meal_counter)
 	}
 	print_status(ph, FORK);
 	print_status(ph, FORK);
-	ft_msleep(ph->data->tte);
-	print_status(ph, EAT);
 	pthread_mutex_lock(ph->mutex.mutex_last_meal);
 	ph->last_meal = time_now_ms();
 	pthread_mutex_unlock(ph->mutex.mutex_last_meal);
+	print_status(ph, EAT);
+	ft_msleep(ph->data->tte);
 	if (ph->id % 2 == 0)
 	{
 		pthread_mutex_unlock(ph->mutex.rfork);
@@ -118,14 +118,19 @@ void	*routine(void *arg)
 			return (NULL);
 		}
 		pthread_mutex_unlock(ph->mutex.stop_mutex);
+		pthread_mutex_lock(ph->mutex.stop_mutex);
 		if (ph->data->notme != -1 && meal_counter == ph->data->notme)
 		{
 			ph->data->stop = true;
+			pthread_mutex_unlock(ph->mutex.stop_mutex);
 			return (NULL);
 		}
+		pthread_mutex_unlock(ph->mutex.stop_mutex);
 		eat(ph, &meal_counter);
 		issleep(ph);
 		think(ph);
+		// if (ph->id % 2 == 0)
+		// 	ft_msleep(1);
 	}
 	return (NULL);
 }
@@ -142,8 +147,13 @@ void	*monitor_routine(void *arg)
 		i = -1;
 		while (++i < size)
 		{
+			pthread_mutex_lock(ph->mutex.stop_mutex);
 			if (ph[i].data->stop)
+			{
+				pthread_mutex_unlock(ph->mutex.stop_mutex);
 				return (NULL);
+			}
+			pthread_mutex_unlock(ph->mutex.stop_mutex);
 			pthread_mutex_lock(ph[i].mutex.mutex_last_meal);
 			if (ph[i].last_meal != 0 && time_now_ms()
 				- ph[i].last_meal > ph[i].data->ttd)
@@ -237,7 +247,8 @@ void	init_used_data(t_ph *ph, t_data *data, pthread_t *thread,
 		ph[i].mutex.mutex_last_meal = mutex_last_meal;
 		ph[i].data = data;
 		ph[i].id = i + 1;
-		ph[i++].last_meal = 0;
+		ph[i].last_meal = time_now_ms();
+		i++;
 	}
 }
 
