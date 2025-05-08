@@ -56,6 +56,18 @@ typedef struct s_housekeeped
   pthread_t *thread;
 } t_housekeeped;
 
-unsigned long time_now_ms(void);
-void init(t_data *data );
-#endif 
+void init(t_data *data);
+void print_status(t_ph *ph, char *status);
+void ft_msleep(unsigned long msec);
+unsigned long time_now_ms();
+void eat(t_ph *ph, int *meal_counter);
+t_housekeeped cleaner_init(t_ph *ph, pthread_t *thread, pthread_mutex_t *forks);
+void init_used_data(t_ph *ph, t_data *data, pthread_t *thread, pthread_mutex_t *forks);
+void creater_joiner(t_ph *ph, pthread_t *thread);
+void Housekeeping(t_housekeeped clean);
+void *monitor_routine(void *arg);
+void *routine(void *arg);
+void die(t_ph *ph);
+void issleep(t_ph *ph);
+void think(t_ph *ph);
+#endif

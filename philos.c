@@ -24,13 +24,15 @@ ssize_t  tol(char *string)
     res = res * 10 + (string[i] - '0');
 		i++;
 	}
-	if (string[i] != '\0')
-	{
-		printf("INVALID PARAM: %s\n", string);
+  if (string[i] != '\0')
+  {
+    printf("INVALID PARAM: %s\n", string);
     return -1;
   }
   return (res);
 }
+
+
 int starting(t_data *data , char **av  , int ac )
 {
 
@@ -42,12 +44,13 @@ int starting(t_data *data , char **av  , int ac )
     data->notme = tol(av[5]);
   else
     data->notme = -1;  
-  data->start_time = time_now_ms();
+  // data->start_time = time_now_ms();
   if(data->nop == -1 || data->nop == 0  || data->tts == -1 || data->ttd == -1 || data->tte == -1 )
   {
     printf("be logical, try to ask the project owner what u should test if you don't know what you are doing\n");
     return 1;
   }
+  data->start_time = time_now_ms();
   return 0;
 }
 
