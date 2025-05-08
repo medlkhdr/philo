@@ -19,7 +19,7 @@ unsigned long	time_now_ms(void)
 	gettimeofday(&tv, NULL);
 	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
-void	ft_msleep(unsigned long msec)
+void	msleep(unsigned long msec)
 {
 	size_t	start;
 	size_t	target;
@@ -68,7 +68,7 @@ void	eat(t_ph *ph, int *meal_counter)
 	ph->last_meal = time_now_ms();
 	pthread_mutex_unlock(ph->mutex.mutex_last_meal);
 	print_status(ph, EAT);
-	ft_msleep(ph->data->tte);
+	msleep(ph->data->tte);
 	if (ph->id % 2 == 0)
 	{
 		pthread_mutex_unlock(ph->mutex.rfork);
@@ -83,7 +83,7 @@ void	eat(t_ph *ph, int *meal_counter)
 
 void	issleep(t_ph *ph)
 {
-	ft_msleep(ph->data->tts);
+	msleep(ph->data->tts);
 	print_status(ph, SLEEP);
 }
 
@@ -93,7 +93,7 @@ void	think(t_ph *ph)
 }
 void	die(t_ph *ph)
 {
-	ft_msleep(ph->data->ttd);
+	msleep(ph->data->ttd);
 	print_status(ph, DEATH);
 }
 void	*routine(void *arg)
@@ -129,8 +129,6 @@ void	*routine(void *arg)
 		eat(ph, &meal_counter);
 		issleep(ph);
 		think(ph);
-		// if (ph->id % 2 == 0)
-		// 	ft_msleep(1);
 	}
 	return (NULL);
 }

@@ -82,7 +82,7 @@ typedef struct s_housekeeped
 
 void				init(t_data *data);
 void				print_status(t_ph *ph, char *status);
-void				ft_msleep(unsigned long msec);
+void				msleep(unsigned long msec);
 unsigned long		time_now_ms(void);
 void				eat(t_ph *ph, int *meal_counter);
 t_housekeeped		cleaner_init(t_ph *ph, pthread_t *thread,
