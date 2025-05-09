@@ -6,7 +6,7 @@
 /*   By: mlakhdar <mlakhdar@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 15:29:09 by mlakhdar          #+#    #+#             */
-/*   Updated: 2025/05/09 15:29:33 by mlakhdar         ###   ########.fr       */
+/*   Updated: 2025/05/09 15:56:19 by mlakhdar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 
 void	eat(t_ph *ph, int *meal_counter)
 {
+	if(ph->id % 2 != 0)
+		msleep(1);
 	if (ph->data->notme != -1)
 	{
 		if (*meal_counter == ph->data->notme)

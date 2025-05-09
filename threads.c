@@ -6,7 +6,7 @@
 /*   By: mlakhdar <mlakhdar@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 15:30:09 by mlakhdar          #+#    #+#             */
-/*   Updated: 2025/05/09 15:31:01 by mlakhdar         ###   ########.fr       */
+/*   Updated: 2025/05/09 15:55:01 by mlakhdar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,6 @@ void	*routine(void *arg)
 	meal_counter = 0;
 	while (1)
 	{
-		if(ph->id % 2 != 0)
-			msleep(1);
 		if (ph->data->nop == 1)
 		{
 			print_status(ph, FORK);
