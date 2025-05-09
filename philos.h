@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philos.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: feedback <feedback@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlakhdar <mlakhdar@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 16:18:32 by feedback          #+#    #+#             */
-/*   Updated: 2025/05/09 15:10:04 by feedback         ###   ########.fr       */
+/*   Updated: 2025/05/09 15:33:37 by mlakhdar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,8 @@ typedef struct s_housekeeped
 	pthread_t		*thread;
 }					t_housekeeped;
 
-void				init(t_data *data);
-void				print_status(t_ph *ph, char *status);
+void ph_dining_solution(t_data *data);
+void print_status(t_ph *ph, char *status);
 void				msleep(unsigned long msec);
 unsigned long		time_now_ms(void);
 void				eat(t_ph *ph, int *meal_counter);

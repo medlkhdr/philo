@@ -65,7 +65,7 @@ int	main(int ac, char **av)
 	}
 	if (starting(&data, av, ac))
 		return (1);
-	init(&data);
+	ph_dining_solution(&data);
 	return (0);
 }
 

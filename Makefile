@@ -1,6 +1,6 @@
 CC = cc 
 CFLAGS = -pthread -Wall -Werror #-g3 -fsanitize=thread  #-fsanitize=undefined
-SRCS = philos.c   init.c
+SRCS = philos.c   init.c activities.c housekeepers.c threads.c time.c
 HEADER = philos.h 
 
 OBJS = $(SRCS:.c=.o)
