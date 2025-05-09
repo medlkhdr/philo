@@ -40,10 +40,16 @@ int	starting(t_data *data, char **av, int ac)
 	data->tte = tol(av[3]);
 	data->tts = tol(av[4]);
 	if (ac == 6)
+	{
+		if(tol(av[5]) == -1)
+		{
+			printf("wrong params.");
+			return -1;
+		}
 		data->notme = tol(av[5]);
+	}
 	else
 		data->notme = -1;
-	// data->start_time = time_now_ms();
 	if (data->nop == -1 || data->nop == 0 || data->tts == -1 || data->ttd == -1
 		|| data->tte == -1)
 	{

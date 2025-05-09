@@ -6,7 +6,7 @@
 /*   By: mlakhdar <mlakhdar@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 16:18:32 by feedback          #+#    #+#             */
-/*   Updated: 2025/05/09 15:33:37 by mlakhdar         ###   ########.fr       */
+/*   Updated: 2025/05/09 15:44:07 by mlakhdar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,8 @@ typedef struct s_ph
 	t_mutex			mutex;
 	t_data			*data;
 	int				id;
-	unsigned long	last_meal;
+	int count;
+	unsigned long last_meal;
 }					t_ph;
 
 typedef struct s_housekeeped

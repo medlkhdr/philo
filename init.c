@@ -6,7 +6,7 @@
 /*   By: mlakhdar <mlakhdar@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 16:18:40 by feedback          #+#    #+#             */
-/*   Updated: 2025/05/09 15:32:20 by mlakhdar         ###   ########.fr       */
+/*   Updated: 2025/05/09 15:44:29 by mlakhdar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ void	init_used_data(t_ph *ph, t_data *data, pthread_t *thread,
 		ph[i].mutex.mutex_last_meal = mutex_last_meal;
 		ph[i].data = data;
 		ph[i].id = i + 1;
+		ph[i].count = 0;
 		ph[i].last_meal = time_now_ms();
 		i++;
 	}
