@@ -6,7 +6,7 @@
 /*   By: feedback <feedback@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 16:18:32 by feedback          #+#    #+#             */
-/*   Updated: 2025/05/08 16:18:33 by feedback         ###   ########.fr       */
+/*   Updated: 2025/05/09 15:10:04 by feedback         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,25 +21,29 @@
 # include <string.h>
 # include <sys/time.h>
 # include <unistd.h>
-# ifndef DEATH
-#  define DEATH "died"
-# endif
-# ifndef EAT
-#  define EAT "is eating"
-# endif
-# ifndef SLEEP
-#  define SLEEP "is sleeping"
-# endif
-# ifndef THINK
-#  define THINK "is thinking"
-# endif
-# ifndef FORK
-#  define FORK "has taken a fork"
-# endif
-# ifndef LIMIT
-#  define LIMIT 4294967295
-# endif
 
+#define RED     "\033[0;31m"
+#define YELLOW  "\033[0;33m"
+#define RESET   "\033[0m"
+
+#ifndef DEATH
+# define DEATH RED "died" RESET
+#endif
+#ifndef EAT
+# define EAT "is eating"
+#endif
+#ifndef SLEEP
+# define SLEEP "is sleeping"
+#endif
+#ifndef THINK
+# define THINK "is thinking"
+#endif
+#ifndef FORK
+# define FORK YELLOW "has taken a fork" RESET
+#endif
+#ifndef LIMIT
+# define LIMIT 4294967295
+#endif
 typedef struct s_data
 {
 	int				nop;

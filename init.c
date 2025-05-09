@@ -6,7 +6,7 @@
 /*   By: feedback <feedback@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 16:18:40 by feedback          #+#    #+#             */
-/*   Updated: 2025/05/08 16:18:40 by feedback         ###   ########.fr       */
+/*   Updated: 2025/05/09 15:07:12 by feedback         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,8 @@ void	*routine(void *arg)
 	meal_counter = 0;
 	while (1)
 	{
+		if(ph->id % 2 != 0)
+			msleep(1);
 		if (ph->data->nop == 1)
 		{
 			print_status(ph, FORK);
@@ -153,8 +155,8 @@ void	*monitor_routine(void *arg)
 			}
 			pthread_mutex_unlock(ph->mutex.stop_mutex);
 			pthread_mutex_lock(ph[i].mutex.mutex_last_meal);
-			if (ph[i].last_meal != 0 && time_now_ms()
-				- ph[i].last_meal > ph[i].data->ttd)
+			if (time_now_ms()
+				- ph[i].last_meal >= ph[i].data->ttd)
 			{
 				pthread_mutex_unlock(ph[i].mutex.mutex_last_meal);
 				die(&ph[i]);
@@ -165,6 +167,7 @@ void	*monitor_routine(void *arg)
 			}
 			pthread_mutex_unlock(ph[i].mutex.mutex_last_meal);
 		}
+		msleep(1);
 	}
 	return (NULL);
 }

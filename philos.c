@@ -68,3 +68,6 @@ int	main(int ac, char **av)
 	init(&data);
 	return (0);
 }
+
+
+
