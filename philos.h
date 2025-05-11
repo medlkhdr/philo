@@ -22,28 +22,28 @@
 # include <sys/time.h>
 # include <unistd.h>
 
-#define RED     "\033[0;31m"
-#define YELLOW  "\033[0;33m"
-#define RESET   "\033[0m"
+# define RED "\033[0;31m"
+# define YELLOW "\033[0;33m"
+# define RESET "\033[0m"
 
-#ifndef DEATH
-# define DEATH RED "died" RESET
-#endif
-#ifndef EAT
-# define EAT "is eating"
-#endif
-#ifndef SLEEP
-# define SLEEP "is sleeping"
-#endif
-#ifndef THINK
-# define THINK "is thinking"
-#endif
-#ifndef FORK
-# define FORK YELLOW "has taken a fork" RESET
-#endif
-#ifndef LIMIT
-# define LIMIT 4294967295
-#endif
+# ifndef DEATH
+#  define DEATH RED "died" RESET
+# endif
+# ifndef EAT
+#  define EAT "is eating"
+# endif
+# ifndef SLEEP
+#  define SLEEP "is sleeping"
+# endif
+# ifndef THINK
+#  define THINK "is thinking"
+# endif
+# ifndef FORK
+#  define FORK YELLOW "has taken a fork" RESET
+# endif
+# ifndef LIMIT
+#  define LIMIT 4294967295
+# endif
 typedef struct s_data
 {
 	int				nop;
@@ -70,8 +70,8 @@ typedef struct s_ph
 	t_mutex			mutex;
 	t_data			*data;
 	int				id;
-	int count;
-	unsigned long last_meal;
+	int				count;
+	unsigned long	last_meal;
 }					t_ph;
 
 typedef struct s_housekeeped
@@ -85,8 +85,8 @@ typedef struct s_housekeeped
 	pthread_t		*thread;
 }					t_housekeeped;
 
-void ph_dining_solution(t_data *data);
-void print_status(t_ph *ph, char *status);
+void				ph_dining_solution(t_data *data);
+void				print_status(t_ph *ph, char *status);
 void				msleep(unsigned long msec);
 unsigned long		time_now_ms(void);
 void				eat(t_ph *ph, int *meal_counter);

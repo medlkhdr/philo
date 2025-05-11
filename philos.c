@@ -1,33 +1,29 @@
 #include "philos.h"
+#include <limits.h>
 
 ssize_t	tol(char *string)
 {
 	int		i;
 	ssize_t	res;
 
-	res = 0;
 	i = 0;
+	res = 0;
 	if (string[i] == '-')
-	{
-		printf("NO NEGATIVE NUMBERS PLEASE!\n");
-		printf("THE NUMBER YOU ENTERED IS INVALID IN MY PROJECT : %s", string);
-		return (-1);
-	}
+		return (write(2, "Error: Negative numbers are not allowed.\n", 41), -1);
 	if (string[i] == '+')
 		i++;
 	while (string[i] >= '0' && string[i] <= '9')
 	{
-		if (res > LIMIT)
-		{
-			printf("overflow !!! \n");
-			return (-1);
-		}
+		if (res > (SSIZE_MAX - (string[i] - '0')) / 10)
+			return (write(2, "Error: Overflow detected.\n", 26), -1);
 		res = res * 10 + (string[i] - '0');
 		i++;
 	}
 	if (string[i] != '\0')
 	{
-		printf("INVALID PARAM: %s\n", string);
+		write(2, "Error: Invalid parameter: ", 26);
+		write(2, string, strlen(string));
+		write(2, "\n", 1);
 		return (-1);
 	}
 	return (res);
@@ -41,10 +37,10 @@ int	starting(t_data *data, char **av, int ac)
 	data->tts = tol(av[4]);
 	if (ac == 6)
 	{
-		if(tol(av[5]) == -1)
+		if (tol(av[5]) == -1)
 		{
 			printf("wrong params.");
-			return -1;
+			return (-1);
 		}
 		data->notme = tol(av[5]);
 	}
@@ -53,8 +49,6 @@ int	starting(t_data *data, char **av, int ac)
 	if (data->nop == -1 || data->nop == 0 || data->tts == -1 || data->ttd == -1
 		|| data->tte == -1)
 	{
-		printf("be logical\n");
-		printf("try to ask the project owner what u should test if you don't know what you are doing\n");
 		return (1);
 	}
 	data->start_time = time_now_ms();
@@ -63,7 +57,8 @@ int	starting(t_data *data, char **av, int ac)
 
 int	main(int ac, char **av)
 {
-	t_data data;
+	t_data	data;
+
 	if (ac != 5 && ac != 6)
 	{
 		printf("TRY TO ENTER THE RIGHT ARGUMENTS HONEY :| ");
@@ -74,6 +69,3 @@ int	main(int ac, char **av)
 	ph_dining_solution(&data);
 	return (0);
 }
-
-
-
