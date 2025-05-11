@@ -87,7 +87,7 @@ void	*monitor_routine(void *arg)
 {
 	t_ph	*ph;
 	int		size;
-	int i;
+	int		i;
 
 	ph = (t_ph *)arg;
 	size = ph->data->nop;

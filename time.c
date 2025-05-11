@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   time.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlakhdar <mlakhdar@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: feedback <feedback@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 15:27:58 by mlakhdar          #+#    #+#             */
-/*   Updated: 2025/05/09 15:28:34 by mlakhdar         ###   ########.fr       */
+/*   Updated: 2025/05/11 23:28:24 by feedback         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ unsigned long	time_now_ms(void)
 	gettimeofday(&tv, NULL);
 	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
+
 void	msleep(unsigned long msec)
 {
 	size_t	start;
@@ -29,6 +30,7 @@ void	msleep(unsigned long msec)
 	while (time_now_ms() < target)
 		usleep(100);
 }
+
 void	print_status(t_ph *ph, char *status)
 {
 	unsigned long	time;

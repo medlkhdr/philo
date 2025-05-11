@@ -6,7 +6,7 @@
 /*   By: feedback <feedback@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 16:18:40 by feedback          #+#    #+#             */
-/*   Updated: 2025/05/11 23:18:30 by feedback         ###   ########.fr       */
+/*   Updated: 2025/05/11 23:27:57 by feedback         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ void	creater_joiner(t_ph *ph, pthread_t *thread)
 	if (size != 1)
 		pthread_join(monitor, NULL);
 }
+
 void	init_mutexes(pthread_mutex_t **print_mutex,
 		pthread_mutex_t **mutex_last_meal, pthread_mutex_t **stop)
 {
@@ -57,7 +58,8 @@ void	init_philosophers(t_help *help)
 	int	i;
 
 	size = help->data->nop;
-	for (i = 0; i < size; i++)
+	i = 0;
+	while (i < size)
 	{
 		pthread_mutex_init(&help->forks[i], NULL);
 		help->ph[i].mutex.rfork = &help->forks[i];
@@ -68,7 +70,7 @@ void	init_philosophers(t_help *help)
 		help->ph[i].data = help->data;
 		help->ph[i].id = i + 1;
 		help->ph[i].count = 0;
-		help->ph[i].last_meal = time_now_ms();
+		help->ph[i++].last_meal = time_now_ms();
 	}
 }
 
@@ -127,5 +129,5 @@ void	ph_dining_solution(t_data *data)
 	clean = cleaner_init(ph, thread, forks);
 	data->start_time = time_now_ms();
 	creater_joiner(ph, thread);
-	Housekeeping(clean);
+	housekeeping(clean);
 }

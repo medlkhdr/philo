@@ -6,7 +6,7 @@
 /*   By: feedback <feedback@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 16:18:32 by feedback          #+#    #+#             */
-/*   Updated: 2025/05/11 23:18:36 by feedback         ###   ########.fr       */
+/*   Updated: 2025/05/11 23:30:34 by feedback         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,28 +22,42 @@
 # include <sys/time.h>
 # include <unistd.h>
 
-# define RED "\033[0;31m"
-# define YELLOW "\033[0;33m"
-# define RESET "\033[0m"
+# ifndef RED
+#  define RED "\033[0;31m"
+# endif
+
+# ifndef YELLOW
+#  define YELLOW "\033[0;33m"
+# endif
+
+# ifndef RESET
+#  define RESET "\033[0m"
+# endif
 
 # ifndef DEATH
 #  define DEATH RED "died" RESET
 # endif
+
 # ifndef EAT
 #  define EAT "is eating"
 # endif
+
 # ifndef SLEEP
 #  define SLEEP "is sleeping"
 # endif
+
 # ifndef THINK
 #  define THINK "is thinking"
 # endif
+
 # ifndef FORK
 #  define FORK YELLOW "has taken a fork" RESET
 # endif
+
 # ifndef LIMIT
 #  define LIMIT 4294967295
 # endif
+
 typedef struct s_data
 {
 	int				nop;
@@ -95,7 +109,6 @@ typedef struct s_help
 	pthread_mutex_t	*stop;
 }					t_help;
 
-
 void				ph_dining_solution(t_data *data);
 void				print_status(t_ph *ph, char *status);
 void				msleep(unsigned long msec);
@@ -106,7 +119,7 @@ t_housekeeped		cleaner_init(t_ph *ph, pthread_t *thread,
 void				init_used_data(t_ph *ph, t_data *data, pthread_t *thread,
 						pthread_mutex_t *forks);
 void				creater_joiner(t_ph *ph, pthread_t *thread);
-void				Housekeeping(t_housekeeped clean);
+void				housekeeping(t_housekeeped clean);
 void				*monitor_routine(void *arg);
 void				*routine(void *arg);
 void				die(t_ph *ph);
