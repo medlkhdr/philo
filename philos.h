@@ -6,7 +6,7 @@
 /*   By: feedback <feedback@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 16:18:32 by feedback          #+#    #+#             */
-/*   Updated: 2025/05/11 18:33:10 by feedback         ###   ########.fr       */
+/*   Updated: 2025/05/11 23:18:36 by feedback         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,17 @@ typedef struct s_housekeeped
 	pthread_mutex_t	*forks;
 	pthread_t		*thread;
 }					t_housekeeped;
+
+typedef struct s_help
+{
+	t_ph			*ph;
+	t_data			*data;
+	pthread_mutex_t	*forks;
+	pthread_mutex_t	*print_mutex;
+	pthread_mutex_t	*mutex_last_meal;
+	pthread_mutex_t	*stop;
+}					t_help;
+
 
 void				ph_dining_solution(t_data *data);
 void				print_status(t_ph *ph, char *status);

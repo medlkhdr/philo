@@ -6,7 +6,7 @@
 /*   By: feedback <feedback@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 15:30:09 by mlakhdar          #+#    #+#             */
-/*   Updated: 2025/05/11 18:33:31 by feedback         ###   ########.fr       */
+/*   Updated: 2025/05/11 23:20:22 by feedback         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ bool	check_stop_condition(t_ph *ph)
 	pthread_mutex_unlock(ph->mutex.stop_mutex);
 	return (false);
 }
+
 void	*routine(void *arg)
 {
 	t_ph	*ph;
@@ -53,6 +54,7 @@ void	*routine(void *arg)
 	}
 	return (NULL);
 }
+
 bool	check_stop(t_ph *ph, int i)
 {
 	pthread_mutex_lock(ph->mutex.stop_mutex);
@@ -64,6 +66,7 @@ bool	check_stop(t_ph *ph, int i)
 	pthread_mutex_unlock(ph->mutex.stop_mutex);
 	return (false);
 }
+
 bool	check_death(t_ph *ph, int i)
 {
 	pthread_mutex_lock(ph[i].mutex.mutex_last_meal);
@@ -79,21 +82,27 @@ bool	check_death(t_ph *ph, int i)
 	pthread_mutex_unlock(ph[i].mutex.mutex_last_meal);
 	return (false);
 }
+
 void	*monitor_routine(void *arg)
 {
-	t_ph *ph = (t_ph *)arg;
-	int size = ph->data->nop;
+	t_ph	*ph;
+	int		size;
+	int i;
 
+	ph = (t_ph *)arg;
+	size = ph->data->nop;
 	while (1)
 	{
-		for (int i = 0; i < size; i++)
+		i = 0;
+		while (i < size)
 		{
 			if (check_stop(ph, i))
 				return (NULL);
 			if (check_death(ph, i))
 				return (NULL);
 		}
-		usleep(500);
+		usleep(600);
+		i++;
 	}
 	return (NULL);
 }
