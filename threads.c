@@ -6,7 +6,7 @@
 /*   By: feedback <feedback@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 15:30:09 by mlakhdar          #+#    #+#             */
-/*   Updated: 2025/05/11 18:23:06 by feedback         ###   ########.fr       */
+/*   Updated: 2025/05/11 18:33:31 by feedback         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,11 @@ bool	handle_single_philosopher(t_ph *ph)
 	return (false);
 }
 
-bool	check_stop_condition(t_ph *ph, int *meal_counter)
+bool	check_stop_condition(t_ph *ph)
 {
 	pthread_mutex_lock(ph->mutex.stop_mutex);
 	if (ph->data->stop || (ph->data->notme != -1
-			&& *meal_counter == ph->data->notme))
+			&& ph->count == ph->data->notme))
 	{
 		ph->data->stop = true;
 		pthread_mutex_unlock(ph->mutex.stop_mutex);
@@ -39,17 +39,15 @@ bool	check_stop_condition(t_ph *ph, int *meal_counter)
 void	*routine(void *arg)
 {
 	t_ph	*ph;
-	int		meal_counter;
 
 	ph = (t_ph *)arg;
-	meal_counter = 0;
 	while (1)
 	{
 		if (handle_single_philosopher(ph))
 			return (NULL);
-		if (check_stop_condition(ph, &meal_counter))
+		if (check_stop_condition(ph))
 			return (NULL);
-		eat(ph, &meal_counter);
+		eat(ph);
 		issleep(ph);
 		think(ph);
 	}

@@ -6,7 +6,7 @@
 /*   By: feedback <feedback@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 15:29:09 by mlakhdar          #+#    #+#             */
-/*   Updated: 2025/05/11 18:23:12 by feedback         ###   ########.fr       */
+/*   Updated: 2025/05/11 18:31:53 by feedback         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,14 +51,14 @@ void	handle_forks(t_ph *ph, int action)
 		}
 	}
 }
-void	eat(t_ph *ph, int *meal_counter)
+void	eat(t_ph *ph)
 {
 	if (ph->id % 2 != 0)
 		usleep(500);
-	if (ph->data->notme != -1 && *meal_counter == ph->data->notme)
+	if (ph->data->notme != -1 && ph->count == ph->data->notme)
 		return ;
 	if (ph->data->notme != -1)
-		(*meal_counter)++;
+		ph->count++;
 	handle_forks(ph, LOCK);
 	print_status(ph, FORK);
 	print_status(ph, FORK);
