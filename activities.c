@@ -6,7 +6,7 @@
 /*   By: feedback <feedback@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 15:29:09 by mlakhdar          #+#    #+#             */
-/*   Updated: 2025/05/11 23:20:57 by feedback         ###   ########.fr       */
+/*   Updated: 2025/05/15 12:23:07 by feedback         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	eat(t_ph *ph)
 {
 	if (ph->id % 2 != 0)
 		usleep(600);
-	if (ph->data->notme != -1 && ph->count == ph->data->notme)
+	if (ph->data->notme != -1 && ph->count == ph->data->notme + 1 )
 		return ;
 	if (ph->data->notme != -1)
 		ph->count++;
