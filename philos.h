@@ -6,7 +6,7 @@
 /*   By: feedback <feedback@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 16:18:32 by feedback          #+#    #+#             */
-/*   Updated: 2025/05/11 23:30:34 by feedback         ###   ########.fr       */
+/*   Updated: 2025/05/15 12:19:59 by feedback         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,41 +22,14 @@
 # include <sys/time.h>
 # include <unistd.h>
 
-# ifndef RED
-#  define RED "\033[0;31m"
-# endif
+# define DEATH "died"
 
-# ifndef YELLOW
-#  define YELLOW "\033[0;33m"
-# endif
+# define EAT "is eating"
+# define SLEEP "is sleeping"
 
-# ifndef RESET
-#  define RESET "\033[0m"
-# endif
+# define THINK "is thinking"
 
-# ifndef DEATH
-#  define DEATH RED "died" RESET
-# endif
-
-# ifndef EAT
-#  define EAT "is eating"
-# endif
-
-# ifndef SLEEP
-#  define SLEEP "is sleeping"
-# endif
-
-# ifndef THINK
-#  define THINK "is thinking"
-# endif
-
-# ifndef FORK
-#  define FORK YELLOW "has taken a fork" RESET
-# endif
-
-# ifndef LIMIT
-#  define LIMIT 4294967295
-# endif
+# define FORK "has taken a fork"
 
 typedef struct s_data
 {
